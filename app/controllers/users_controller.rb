@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-before_filter :authenticate, :only => [:index, :edit, :update, :destroy]
+  before_filter :authenticate, :only => [:index, :edit, :update, :destroy]
   before_filter :correct_user, :only => [:edit, :update]
   before_filter :admin_user,   :only => :destroy
 
@@ -11,12 +11,19 @@ before_filter :authenticate, :only => [:index, :edit, :update, :destroy]
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(:page => params[:page])
     @title = @user.name
   end
 
   def new
+    if @user = current_user
+      then redirect_to(root_path)
+      flash[:success] = "You're already signed up"
+    end
+    
     @user  = User.new
     @title = "Sign up"
+    
   end
 
   def create
@@ -47,16 +54,19 @@ before_filter :authenticate, :only => [:index, :edit, :update, :destroy]
   end
 
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User destroyed."
-    redirect_to users_path
+    @user = User.find(params[:id])
+    if @user.admin != true
+      then
+      User.find(params[:id]).destroy
+      flash[:success] = "User destroyed."
+      redirect_to users_path
+    else
+      flash[:error] = "You can not be destroyed."
+      redirect_to users_path
+    end
   end
 
   private
-
-  def authenticate
-    deny_access unless signed_in?
-  end
 
   def correct_user
     @user = User.find(params[:id])
