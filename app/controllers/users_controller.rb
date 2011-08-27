@@ -1,9 +1,7 @@
 class UsersController < ApplicationController
-
-  before_filter :authenticate, :only => [:index, :edit, :update, :destroy]
+  before_filter :authenticate, :except => [:show, :new, :create]
   before_filter :correct_user, :only => [:edit, :update]
   before_filter :admin_user,   :only => :destroy
-
   def index
     @title = "All users"
     @users = User.paginate(:page => params[:page])
@@ -20,10 +18,10 @@ class UsersController < ApplicationController
       then redirect_to(root_path)
       flash[:success] = "You're already signed up"
     end
-    
+
     @user  = User.new
     @title = "Sign up"
-    
+
   end
 
   def create
@@ -66,6 +64,20 @@ class UsersController < ApplicationController
     end
   end
 
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.following.paginate(:page => params[:page])
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(:page => params[:page])
+    render 'show_follow'
+  end
+
   private
 
   def correct_user
@@ -76,6 +88,5 @@ class UsersController < ApplicationController
   def admin_user
     redirect_to(root_path) unless current_user.admin?
   end
-
 
 end

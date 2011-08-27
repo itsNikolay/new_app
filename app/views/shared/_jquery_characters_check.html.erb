@@ -1,0 +1,16 @@
+
+<script type="text/javascript">
+	$( function() {
+		$('#micropost_content').keyup( function(e) {
+			var maxLength = 140;
+			var textlength = this.value.length;
+			if (textlength >= maxLength) {
+				$('#charStatus').html('You cannot write more then ' + maxLength + ' characters!');
+				this.value = this.value.substring(0, maxLength);
+				e.preventDefault();
+			} else {
+				$('#charStatus').html('You have ' + (maxLength - textlength) + ' characters left.');
+			}
+		});
+	});
+</script>

@@ -38,6 +38,8 @@ describe MicropostsController do
         post :create, :micropost => @attr
         response.should render_template('pages/home')
       end
+
+      
     end
 
     describe "success" do

@@ -1,9 +1,15 @@
+<%= render 'shared/jquery_characters_check' %>
 <%= form_for @micropost do |f| %>
-  <%= render 'shared/error_messages', :object => f.object %>
-  <div class="field">
-    <%= f.text_area :content %>
-  </div>
-  <div class="actions">
-    <%= f.submit "Submit" %>
-  </div>
+<%= render 'shared/error_messages', :object => f.object %>
+<div class="field">
+	<%= f.text_area :content %>
+</div>
+
+(Maximum characters: 140)
+<br />
+<span id="charStatus"></span>
+
+<div class="actions">
+	<%= f.submit "Submit" %>
+</div>
 <% end %>
